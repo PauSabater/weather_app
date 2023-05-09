@@ -1,0 +1,16 @@
+@use '../../assets/scss/mixins.scss';
+
+.wrapp {
+    display: flex;
+    box-sizing: border-box;
+    width: 100vw;
+    padding: var(--pd-fullwidth);
+    height: 100vh;
+}
+
+.title {
+    font-family: "raleway";
+    font-size: 10vw;
+    font-weight: 800;
+    margin: auto 0;
+}
