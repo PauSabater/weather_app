@@ -1,0 +1,34 @@
+@use './mixins';
+
+:root {
+    // padding
+    --pd-xs: 5px;
+    --pd-sm: 10px;
+    --pd-md: 15px;
+    --pd-lg: 20px;
+    --pd-xl: 30px;
+    --pd-xl: 40px;
+    --pd-2xl: 50px;
+
+    --pd-screen: var(--pd-md);
+    --pd-fullwidth: 0 5vw;
+
+    @include mixins.desktop {
+        --pd-screen: var(--pd-md); 
+    }
+
+    // Sizes
+    --sz-content: 100%;
+
+    @include mixins.desktop {
+        --sz-content: 500px; 
+    }
+
+
+    // Colors
+    --c-black: rgb(10, 10, 10);
+    --c-font-global: var(--c-black);
+
+
+}
+
