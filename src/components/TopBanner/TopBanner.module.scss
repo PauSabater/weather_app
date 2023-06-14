@@ -2,15 +2,17 @@
 
 .wrapp {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     box-sizing: border-box;
     width: 100vw;
-    padding: var(--pd-fullwidth);
     height: 100vh;
+    padding: var(--pd-fullwidth);
 }
 
-.title {
+.title, line {
     font-family: "raleway";
-    font-size: 10vw;
+    font-size: 9vw;
     font-weight: 800;
-    margin: auto 0;
+    margin: 0;
 }

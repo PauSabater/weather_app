@@ -17,6 +17,15 @@
         --pd-screen: var(--pd-md); 
     }
 
+    // Margins
+    --mg-xs: 5px;
+    --mg-sm: 10px;
+    --mg-md: 15px;
+    --mg-lg: 20px;
+    --mg-xl: 30px;
+    --mg-xl: 40px;
+    --mg-2xl: 50px;
+
     // Sizes
     --sz-content: 100%;
 
@@ -28,6 +37,15 @@
     // Colors
     --c-black: rgb(10, 10, 10);
     --c-font-global: var(--c-black);
+
+    // Transitions
+    --tr-base: 0.3s;
+
+    // Components
+    --input-height: 50px;
+
+    // Colors
+    --bg-main: white;
 
 
 }
