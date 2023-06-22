@@ -10,19 +10,16 @@ import { TextBanner } from '../TextBanner/TextBanner'
 import { TopBanner } from '../TopBanner/TopBanner'
 import { SceneBanner } from '../Scene/SceneBanner'
 import { Particles } from '../Particles/Particles'
-import { CityFinder } from '../WeatherApp/CityFinder/CityFinder';
+import { CityFinder } from '../WeatherApp/components/CityFinder/CityFinder'
+import { WeatherApp } from '../WeatherApp/components/WeatherApp/WeatherApp'
 // import { BubblesBanner } from '../Scene/Bubbles'
 
 function App() {
 
     return (
         <div className="main">
-            <CityFinder 
-                placeholder={ texts.weatherApp.placeholder } 
-                label={ texts.weatherApp.label } 
-                name={ texts.weatherApp.name }                
-            ></CityFinder>
-            <SceneBanner></SceneBanner>
+            <WeatherApp texts={ texts.weatherApp }></WeatherApp>
+
             <TopBanner title={ texts.topBanner.title } lines={ texts.topBanner.lines }></TopBanner>
             <TextBanner text={ texts.intro.text }></TextBanner>
         </div>

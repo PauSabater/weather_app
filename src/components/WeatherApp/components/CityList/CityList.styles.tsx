@@ -1,4 +1,5 @@
-import styled, { keyframes } from 'styled-components'
+import { keyframes } from 'styled-components'
+import styled from 'styled-components/macro'
 
 export const appear = keyframes`
     from {
@@ -15,26 +16,27 @@ export const Wrap = styled.ul`
     flex-direction: column;
     top: 0;
     left: 0;
-    margin: 0;
-    padding: 0;
     width: 100%;
-    box-shadow: 0px 5px 23px 1px #000000;
-    border-radius: 5px;
+    margin: 0;
+    padding: 10px 0 20px;
+    font-size: var(--fs-base);
+    box-shadow: var(--input-bs-focus);
+    border-radius: 0 0 calc(var(--input-height)/2) calc(var(--input-height)/2);
     z-index: 1;
     background-color: var(--bg-main);
-    animation: ${appear} 1s;
 `
 
 export const Item = styled.li`
+    font-size: var(--fs-base);
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    padding: var(--pd-sm) var(--pd-sm);
+    padding: var(--pd-sm) var(--pd-sm) var(--pd-sm) 70px;
     transition: background var(--tr-base);
-    border-radius: 5px;
+    animation: ${appear} 0.3s;
 
     &:hover {
-        background: lightgrey;
+        background: var(--bg-grey-hover);
         font-weight: bold;
     }
 `

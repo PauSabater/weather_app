@@ -1,32 +1,33 @@
 import { useState } from "react"
 
 import * as Styled from "./InputText.styles"
+import { ReactComponent as SearchIcon } from "../../assets/svg/icons/search.svg"
 
 interface IInputText { 
     handleInputChangeEvent: any, 
     placeholder: string, 
-    label: string, 
     name: string, 
     handleInputFocusEvent: any, 
     textSelected: string,
-    allowTyping: boolean
+    allowTyping: boolean,
+    isExpanded: boolean
 }
 
 export function InputText({ 
         handleInputChangeEvent, 
         placeholder, 
-        label, 
         name, 
         handleInputFocusEvent, 
         textSelected,
-        allowTyping
+        allowTyping,
+        isExpanded
     }: IInputText) {
-
-    // const [isInputInitialised, setIsInputInitialised] = useState<boolean>(false)
 
     return (
         <Styled.Wrap>
-            <Styled.Label htmlFor={`f-${name}`}>{label}</Styled.Label>
+            <Styled.IconWrap>
+                <SearchIcon></SearchIcon>
+            </Styled.IconWrap>
             <Styled.Input 
                 onChange={handleInputChangeEvent}
                 onFocus={handleInputFocusEvent}
@@ -34,6 +35,8 @@ export function InputText({
                 id={`f-${name}`}
                 name={name}
                 placeholder={placeholder}
+                aria-expanded={isExpanded}
+                aria-controls="list-cities"
                 {...(
                     textSelected && allowTyping === false && { value: textSelected })
                 }

@@ -1,31 +1,29 @@
 // https://rapidapi.com/wirefreethought/api/geodb-cities
 
-import { ChangeEvent, useState, useCallback } from "react"
+import { ChangeEvent, useState, useCallback, useRef } from "react"
 import { InputText } from "../InputText/InputText"
 import { CityList } from "../CityList/CityList"
 import throttle from "lodash.throttle"
 import * as Styled from "./CityFinder.styles"
-import { ICitiesData } from "../../../assets/ts/interfaces/interfaces"
+import { ICitiesData, ICityFinder } from "../../../../assets/ts/interfaces/interfaces"
 
-interface ICityFinder {
-    placeholder: string, 
-    label: string, 
-    name: string
-}
 
-export function CityFinder({ placeholder, label, name }: ICityFinder) {
+export function CityFinder({cityFinderTexts, updateCityApiResult}: {cityFinderTexts: ICityFinder, updateCityApiResult: any}) {
 
     const [citiesData, setCitiesData] = useState<ICitiesData[]>(
         [{
+            country: "",
             name: "",
             latitude: "",
             longitude: ""
         }]
     )
+    const elementListRef = useRef(null)
+    const elementInputRef = useRef(null)
+    
     const [inputText, setInputText] = useState<string>('')
     const [isListOpen, setIsListOpen] = useState<boolean>(false)
     const [isTypingAllowed, setIsTypingAllowed] = useState<boolean>(true)
-    const [isSelected, setIsSelected] = useState<boolean>(false)
 
     // Store function in order to prevent it executing on each re-render
     const throttleFn = useCallback(throttle((city: string)=> makeApiRequestT(city), 1500), [])
@@ -55,9 +53,18 @@ export function CityFinder({ placeholder, label, name }: ICityFinder) {
                 const citiesList: ICitiesData[] = []
 
                 for (const cityData of results.data) {
+                    // Exclude results that do not start with the city name, without counting the spaces
+                    if (!cityData.name.startsWith(city.trim())) continue
+                    // Exclude already existing results from the same country
+                    if (citiesList.filter((city) => 
+                        city.name === cityData.name && city.country === cityData.country).length > 0) {
+                            continue
+                    } 
+
                     const cityItem: string = `${cityData.name}, ${cityData.country}`
                     citiesList.push({
-                        name: `${cityData.name}, ${cityData.country}`,
+                        country: cityData.country,
+                        name: cityData.name,
                         latitude: cityData.latitude,
                         longitude: cityData.longitude
                     })
@@ -65,23 +72,6 @@ export function CityFinder({ placeholder, label, name }: ICityFinder) {
 
                 setCitiesData(citiesList)
             }
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-    const makeWeatherApiRequest = async (latitude: string, longitude: string)=> {
-        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=22701db4524b58c1f26b55888022c05b`
-        const options = {
-            method: 'GET',
-            "Content-Type": "application/json",
-        }
-
-        try {
-            const response: Response = await fetch(url, options)
-            const result = await response.text()
-            const results: any = JSON.parse(result)
-            console.log("api weather is "+results)
         } catch (error) {
             console.error(error)
         }
@@ -99,49 +89,79 @@ export function CityFinder({ placeholder, label, name }: ICityFinder) {
             setInputText(value)
             setIsListOpen(true)
             setInputText(value)
+
+        } else if (value.length === 0) {
+            setCitiesData([])
+            setIsListOpen(false)
         }
     }
 
     /**
      * Gets the value from the input change and sets the corresponding states
-     * @param  {[ChangeEvent<HTMLInputElement>]} event [The event passed on change]
-     * @return {[type]}      [description]
+     * @param  {ChangeEvent<HTMLInputElement>} event [The event passed on change]
+     * @return {type}      [description]
      */
     const handleListClickSelect = (event: ChangeEvent<HTMLInputElement>) => {
         setIsListOpen(false)
         setInputText(event.target.innerHTML)
         // This function will allow overriding the input value
         setIsTypingAllowed(false)
-        setIsSelected(true)
-        makeWeatherApiRequest("52.5233", "13.41377")
-        // setWeatherApiDataRequest
+
+        updateCityApiResult({
+            latitude: event.target.getAttribute("data-latitude") || "",
+            longitude: event.target.getAttribute("data-longitude") || "",
+            name: event.target.innerHTML || "",
+        })
     }
 
     /**
      * Sets the actions when input is focused
      */
-    const handleInputFocusEvent = ()=> {
+    const handleInputFocusEvent = () => {
         // This value will make the attribute value from the input not be overwriten
         setIsTypingAllowed(true)
+        setIsListOpen(true)
     }
+
+    /**
+     * Detects if click is outside current component, if so closes the list
+     * @param  {Event} e     [The event passed on click]
+     */
+    const handleClickOutside = (e: MouseEvent) => {
+        const currentListEl: HTMLElement | null = elementListRef.current
+        const currentInputEl: HTMLElement | null = elementInputRef.current
+
+        if (isListOpen 
+            && currentListEl && !(currentListEl as HTMLElement).contains(e.target as HTMLElement)
+            && currentInputEl && !(currentInputEl as HTMLElement).contains(e.target as HTMLElement)
+        ) {
+            setIsListOpen(false)
+        }
+    }
+
+    // Add listener to detect click outside of list
+    document.addEventListener('mousedown', handleClickOutside)
 
     return (
         <Styled.Container>
-            <Styled.Wrap>
+            <Styled.Wrap
+                ref={elementInputRef}
+            >
                 <InputText
                     handleInputChangeEvent={handleInputChangeEvent}
-                    placeholder={placeholder}
-                    label={label}
-                    name={name}
+                    placeholder={cityFinderTexts.placeholder}
+                    name={cityFinderTexts.name}
                     handleInputFocusEvent={handleInputFocusEvent}
                     textSelected={inputText}
                     allowTyping={isTypingAllowed}
+                    isExpanded={isListOpen}
                 ></InputText>
             </Styled.Wrap>
-            <Styled.Wrap>
+            <Styled.Wrap 
+                ref={elementListRef}>
                 { citiesData.length > 1 && isListOpen && inputText.length > 2 
-                    ? <CityList 
-                        cities={citiesData}
+                    ? <CityList
+                        citiesData={citiesData}
                         handleListClickSelect={handleListClickSelect}
                     ></CityList>
                     : '' 

@@ -13,6 +13,8 @@
     --pd-screen: var(--pd-md);
     --pd-fullwidth: 0 5vw;
 
+    --pd-inner-component: var(--pd-lg);
+
     @include mixins.desktop {
         --pd-screen: var(--pd-md); 
     }
@@ -25,6 +27,8 @@
     --mg-xl: 30px;
     --mg-xl: 40px;
     --mg-2xl: 50px;
+
+    --mg-between-components: var(--mg-lg);
 
     // Sizes
     --sz-content: 100%;
@@ -40,9 +44,6 @@
 
     // Transitions
     --tr-base: 0.3s;
-
-    // Components
-    --input-height: 50px;
 
     // Colors
     --bg-main: white;
