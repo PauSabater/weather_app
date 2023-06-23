@@ -42,7 +42,7 @@ export const ContainerGraph = styled.div`
     padding-left: calc(clamp(35px, 6.25%, 6.25%) - 22px);
 
     & div {
-        height: 80px;  
+        height: 80px;
     }
 `
 
@@ -89,7 +89,7 @@ export const HourForecastContainer = styled.div`
     }
 
     &[data-is-selected="true"] p {
-        font-weight: 600; 
+        font-weight: 600;
     }
 
     p {
@@ -133,7 +133,7 @@ export const ForecastButton = styled.button`
         content: '';
         position: absolute;
         bottom: -5px;
-        border-radius: 2.5px;      
+        border-radius: 2.5px;
         left: 0;
         width: 100%;
         height: 5px;
@@ -147,6 +147,10 @@ export const ForecastButton = styled.button`
 
     &[data-type="rain"]:after {
         background-color: var(--c-rain);
+    }
+
+    &[data-type="wind"]:after {
+        background-color: var(--c-wind);
     }
 
     &[data-active="true"]:after {

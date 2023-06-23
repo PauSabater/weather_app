@@ -16,10 +16,10 @@ export const Container = styled.ul`
 
 
     svg {
-        height: 20px;
-        width: 20px;
+        height: 30px;
+        width: 30px;
         align-self: center;
-    } 
+    }
 `
 
 export const ContainerSingleDay = styled.li`
