@@ -1,11 +1,13 @@
-import { useState } from "react"
-import { ICitiesData, ICurrentWeatherApiData, IWeatherAppTexts } from "../../../../assets/ts/interfaces/interfaces"
+import { useRef, useState } from "react"
+import { IApiForecastResponse, ICitiesData, IWeatherAppTexts } from "../../assets/interfaces/interfaces"
 import { BannerSelectedWeather } from "../BannerSelectedWeather/BannerSelectedWeather"
 import { CityFinder } from "../CityFinder/CityFinder"
 import * as Styled from "./WeatherApp.styles"
 import { BannerForecastHours } from "../BannerForecastHours/BannerForecastHours"
 import { BannerAirConditions } from "../BannerAirConditions/BannerAirConditions"
 import { BannerForecastDays } from "../BannerForecastDays/BannerForecastDays"
+import "./main.css"
+
 
 export function WeatherApp({ texts }: { texts: IWeatherAppTexts }) {
 
@@ -19,28 +21,14 @@ export function WeatherApp({ texts }: { texts: IWeatherAppTexts }) {
         }
     )
 
-    // State for the Current Weather api response
-    const [currentWeatherApiData, setCurrentWeatherApiData] = useState<ICurrentWeatherApiData | null>(null)
-    
     // State for the Forecast Weather api response
-    const [forecastApiData, setForecastApiData] = useState<any | null>(null)
+    const [forecastApiData, setForecastApiData] = useState<IApiForecastResponse[] | null>(null)
 
-    // The displayed day
-    const [displayedDay, setDisplayedDay] = useState<string>("")
+    // The displayed day and time on the API format
+    const [displayedDayTime, setDisplayedDayTime] = useState<string>("")
 
     // The displayed day name
     const [displayedDayName, setDisplayedDayName] = useState<string>("TODAY")
-
-    // Selected day and hour string
-    const [selectedDayHour, setSelectedDayHour] = useState<string>("")
-
-    /**
-     * Updates selected day and hour to display on selected conditions
-     * @param  {string} selectedDayHour  : The selected day and hour string
-     */
-    const updateSelectedDayHour = (selectedDayHour: string): void => {
-        setSelectedDayHour(selectedDayHour)
-    }
 
 
     /**
@@ -53,13 +41,21 @@ export function WeatherApp({ texts }: { texts: IWeatherAppTexts }) {
     }
 
     /**
+     * Updates selected day and time to display on selected conditions
+     * @param  {string} selectedDayTime  : The selected day and hour string
+     */
+    const handleClickHour = (selectedDayTime: string): void => {
+        setDisplayedDayTime(selectedDayTime)
+    }
+
+    /**
      * Updates the displayed day after click on day forecast container
      * @param  {Event} e       : The event passed on click
      */
     const handleClickDay = (e: Event): void => {
         const elTarget: HTMLElement = e.target as HTMLElement
         if (elTarget !== null) {
-            setDisplayedDay(elTarget.getAttribute("data-date") || "")
+            setDisplayedDayTime(elTarget.getAttribute("data-day-time") || "")
             setDisplayedDayName(elTarget.getAttribute("data-dayname") || "")
         }
     }
@@ -76,7 +72,7 @@ export function WeatherApp({ texts }: { texts: IWeatherAppTexts }) {
                 `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=22701db4524b58c1f26b55888022c05b`,
                 `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=22701db4524b58c1f26b55888022c05b`
             ]
-              
+
             // map every url to the promise of the fetch
             const requests = urls.map(url => fetch(url))
             const responses: Response[] = await Promise.all(requests)
@@ -84,52 +80,57 @@ export function WeatherApp({ texts }: { texts: IWeatherAppTexts }) {
             const forecastWeatherResponse =  await JSON.parse(await responses[1].text())
 
             // Saves the forecast returned data:
-            setForecastApiData(forecastWeatherResponse)
+            setForecastApiData(forecastWeatherResponse.list)
             // Set the current day as today as first render:
-            setDisplayedDay(forecastWeatherResponse.list[0].dt_txt)
+            setDisplayedDayTime(forecastWeatherResponse.list[0].dt_txt)
 
         } catch (error) {
             console.error(error)
         }
     }
-    
+
     return (
         <Styled.WrapMain>
-            <CityFinder 
-                cityFinderTexts={texts.cityFinderTexts}
-                updateCityApiResult={updateCityApiResult}              
-            ></CityFinder>
-            <Styled.WrapFirstColumn>
-                {currentWeatherApiData ? 
-                    <Styled.WrapCurrentConditions>
-                        <BannerSelectedWeather
-                            apiData={forecastApiData.list}
-                            displayedDateHour={selectedDayHour}
-                            displayedDayName={displayedDayName}
-                            city={cityApiData.name}
-                        ></BannerSelectedWeather>
-                        <BannerAirConditions 
-                            apiData={currentWeatherApiData as ICurrentWeatherApiData}
-                        ></BannerAirConditions>
-                        <BannerForecastHours
-                            apiData={forecastApiData.list}
-                            displayedDayHour={displayedDay}
-                            displayedDayName={displayedDayName}
-                            updateSelectedDayHour={updateSelectedDayHour}
-                        ></BannerForecastHours>
-                    </Styled.WrapCurrentConditions>
-                    : ""
-                }
-            </Styled.WrapFirstColumn>
-            {currentWeatherApiData ? 
-                <Styled.WrapBannerForecastNextDays>
-                    <BannerForecastDays
-                        apiData={forecastApiData.list}
-                        handleClickDay={handleClickDay}
-                    ></BannerForecastDays>
-                </Styled.WrapBannerForecastNextDays>
-                : ""
-            }
+            <div className="container-parent-webb-app">
+                <div className="container-child-webb-app">
+                    <CityFinder
+                        cityFinderTexts={texts.cityFinderTexts}
+                        updateCityApiResult={updateCityApiResult}
+                    ></CityFinder>
+                    <Styled.WrapFirstColumn>
+                        {forecastApiData ?
+                            <Styled.WrapCurrentConditions>
+                                <BannerSelectedWeather
+                                    apiData={forecastApiData}
+                                    displayedDayTime={displayedDayTime}
+                                    displayedDayName={displayedDayName}
+                                    city={cityApiData.name}
+                                ></BannerSelectedWeather>
+                                <BannerAirConditions
+                                    apiData={forecastApiData}
+                                    displayedDayTime={displayedDayTime}
+                                ></BannerAirConditions>
+                                <BannerForecastHours
+                                    apiData={forecastApiData}
+                                    displayedDayTime={displayedDayTime}
+                                    displayedDayName={displayedDayName}
+                                    handleClickHour={handleClickHour}
+                                ></BannerForecastHours>
+                            </Styled.WrapCurrentConditions>
+                            : ""
+                        }
+                    </Styled.WrapFirstColumn>
+                    {forecastApiData ?
+                        <Styled.WrapBannerForecastNextDays>
+                            <BannerForecastDays
+                                apiData={forecastApiData}
+                                handleClickDay={handleClickDay}
+                            ></BannerForecastDays>
+                        </Styled.WrapBannerForecastNextDays>
+                        : ""
+                    }
+                </div>
+            </div>
         </Styled.WrapMain>
     )
 }

@@ -13,19 +13,33 @@ export const Container = styled.div`
     padding: var(--pd-inner-component);
 `
 
-export const Wrap = styled.div`
+export const ContainerHoursAndGraph = styled.div`
     position: relative;
+    height: 160px;
+    overflow-x: auto;
+`
+
+export const ContainerHours = styled.div`
+    position: absolute;
+    min-width: 600px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     margin-bottom: var(--mg-sm);
+    top: 10px;
+    left: 0;
 `
 
-export const GraphContainer = styled.div`
+export const ContainerGraph = styled.div`
+    position: absolute;
+    min-width: 600px;
+    width: 100%;
     box-sizing: border-box;
     height: 80px;
-    width: 100%;
-    padding-right: calc(6.25% - 10px);
-    padding-left: calc(6.25% - 22px);
+    bottom: 0;
+    left: 0;
+    padding-right: calc(clamp(48px, 6.25%, 6.25%) - 15px);
+    padding-left: calc(clamp(35px, 6.25%, 6.25%) - 22px);
 
     & div {
         height: 80px;  
@@ -101,7 +115,7 @@ export const HourForecastContainer = styled.div`
 export const ButtonsWrap = styled.div`
     display: flex;
     flex-grow: column;
-    margin-bottom: var(--mg-md);
+    margin-bottom: var(--mg-xs);
 `
 
 export const ForecastButton = styled.button`

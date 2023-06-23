@@ -22,7 +22,7 @@ export const CurrentTemperature = styled.p`
     margin-bottom: var(--mg-sm);
 `
 
-export const DisplayedDayHour = styled.p`
+export const Hour = styled.p`
     font-size: var(--fs-base);
     margin: 0;
     color: var(--fc-light);

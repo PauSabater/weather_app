@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ICitiesData } from "../../../../assets/ts/interfaces/interfaces"
+import { ICitiesData } from "../../assets/interfaces/interfaces"
 import * as Styled from "./CityList.styles"
 
 export function CityList({ citiesData, handleListClickSelect }: { citiesData: ICitiesData[], handleListClickSelect: any }) {

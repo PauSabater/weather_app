@@ -5,7 +5,7 @@ import { InputText } from "../InputText/InputText"
 import { CityList } from "../CityList/CityList"
 import throttle from "lodash.throttle"
 import * as Styled from "./CityFinder.styles"
-import { ICitiesData, ICityFinder } from "../../../../assets/ts/interfaces/interfaces"
+import { ICitiesData, ICityFinder } from "../../assets/interfaces/interfaces"
 
 
 export function CityFinder({cityFinderTexts, updateCityApiResult}: {cityFinderTexts: ICityFinder, updateCityApiResult: any}) {

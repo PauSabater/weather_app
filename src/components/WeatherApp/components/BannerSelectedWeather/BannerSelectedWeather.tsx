@@ -2,37 +2,47 @@ import { useState } from "react"
 import * as Styled from './BannerSelectedWeather.styles'
 import { getWeatherIcon } from "../../assets/utils/svg"
 import React from "react"
+import { formatedDayTime, getSpecificForecast } from "../../assets/utils/utils"
+import { IApiForecastResponse } from "../../assets/interfaces/interfaces"
 
 
-export function BannerSelectedWeather({apiData, city, displayedDateHour, displayedDayName}: {
-        apiData: any[], 
+export function BannerSelectedWeather({apiData, city, displayedDayTime, displayedDayName}: {
+        apiData: IApiForecastResponse[], 
         city: string,
-        displayedDateHour: string,
+        displayedDayTime: string,
         displayedDayName: string
     }){
 
     //https://iconscout.com/lotties/weather
 
     // The forecast for the selected day and hour
-    const [selectedForecast, setSelectedForecast] = useState<any>(null)
+    const [selectedForecast, setSelectedForecast] = useState<IApiForecastResponse | null>(null)
+
+    // The hour displayed
+    const [displayedHour, setDisplayedHour] = useState<string>("now")
 
     // Updates selected forecast state when the date and hour to dispay change
     React.useEffect(() => {
-        getSpecificForecast(displayedDateHour)
-    }, [displayedDateHour])
+        if (apiData.length > 0) {
+            const hour: string = displayedDayTime.includes('midnight') 
+                ? '00:00h' 
+                : `${displayedDayTime.split(' ')[1].split(":")[0]}:00h`
 
-    /**
-     * Gets a specific forecast given the date and hour property value
-     * @param {string} displayedDateHour   : The date and hour string
-     */
-    const getSpecificForecast = (displayedDateHour: string) => {
-        for (const forecast of apiData) {
-            if (!forecast.dt_txt.includes(displayedDateHour)) continue
-
-            setSelectedForecast(forecast)
-            return forecast.main.temp_max
+            const dayTime: string = formatedDayTime(displayedDayTime)
+            setSelectedForecast(getSpecificForecast(dayTime, apiData))
+            setDisplayedHour(hour)
         }
-    }
+    }, [displayedDayTime])
+
+    // Restarts hour to "now" on data update
+    React.useEffect(() => {
+        if (apiData.length > 0) {
+            setDisplayedHour("now")
+        }
+    }, [apiData])
+
+
+
 
     if (selectedForecast !== null) {
         return (
@@ -43,11 +53,11 @@ export function BannerSelectedWeather({apiData, city, displayedDateHour, display
                 <Styled.CurrentCity>
                     {city}
                 </Styled.CurrentCity>
-                <Styled.DisplayedDayHour>
-                    {`${displayedDayName} - ${displayedDateHour.split(' ')[1].split(":")[0]}:00h`}
-                </Styled.DisplayedDayHour>
+                <Styled.Hour>
+                    {`${displayedDayName} - ${displayedHour}`}
+                </Styled.Hour>
                 <Styled.CurrentTemperature>
-                    {`${Math.round(parseInt(selectedForecast.main.temp_max))}°`}
+                    {`${Math.round(selectedForecast.main.temp_max)}°`}
                 </Styled.CurrentTemperature>
             </Styled.Container>
             ) 

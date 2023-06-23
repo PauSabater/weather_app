@@ -2,9 +2,14 @@ import { useState } from "react"
 import * as Styled from './BannerForecastDays.styles'
 import { getDayName, getHighestCountPosition, getRoundedTemp, getUniqueValuesFromArray } from "../../assets/utils/utils"
 import { getWeatherIcon } from "../../assets/utils/svg"
+import { IApiForecastResponse } from "../../assets/interfaces/interfaces"
+import React from "react"
 
 
-export function BannerForecastDays({apiData, handleClickDay}: {apiData: any, handleClickDay: Function}) {
+export function BannerForecastDays({apiData, handleClickDay}: {
+        apiData: IApiForecastResponse[], 
+        handleClickDay: Function
+    }) {
 
     // const [isInputInitialised, setIsInputInitialised] = useState<boolean>(false)
 
@@ -25,6 +30,11 @@ export function BannerForecastDays({apiData, handleClickDay}: {apiData: any, han
         ...initialForecastState,
         "0": false,
     }
+
+    // Restarts day selection on data update
+    React.useEffect(() => {
+        setForecastState(initialForecastState)
+    }, [apiData])
 
     // Keeps the selected elements state
     const [forecastState , setForecastState] = useState<any>(initialForecastState)
@@ -48,7 +58,7 @@ export function BannerForecastDays({apiData, handleClickDay}: {apiData: any, han
      * @param  {string} item  : The name of the item property
      * @return {string}       : The most common string on the array
      */
-    const getMostCommonItem = (day: string, item: string): string => {
+    const getMostCommonItem = (day: string, item: "description" | "icon"): string => {
         const arrayAllItems: string[] = []
 
         for (const forecast of apiData) {
@@ -87,32 +97,34 @@ export function BannerForecastDays({apiData, handleClickDay}: {apiData: any, han
         handleClickDay(e)
     }
 
+    if (apiData !== null && apiData.length > 0) {
+        return (
+            <Styled.Container>
+                <Styled.Title>5 DAY FORECAST</Styled.Title>
     
-    return (
-        <Styled.Container>
-            <Styled.Title>5 DAY FORECAST</Styled.Title>
+                {apiData.map((forecast: IApiForecastResponse, index: number) =>
+                    Number.isInteger(index / 8) ? 
+                        <Styled.ContainerSingleDay
+                            onClick={(e) => handleSelectEvent(e)}
+                            onKeyDown={(e) => {if (e.key === 'Enter') handleSelectEvent(e)}}
+                            tabIndex={0}
+                            data-day-time={index === 0 ? forecast.dt_txt : `${forecast.dt_txt.split(' ')[0]} midnight` }
+                            data-dayname={getDayName(index / 8)}
+                            data-day={index}
+                            data-is-open={forecastState[index] ? 'true' : 'false'}
+                        >
+                            <p>{getDayName(index / 8)}</p>
+                            {getWeatherIcon(
+                                getMostCommonItem(forecast.dt_txt.split(' ')[0], 'icon')
+                            )}
+                            <p>{getMostCommonItem(forecast.dt_txt.split(' ')[0], 'description')}</p>
+                            <p>{getMaxMinTemp(forecast.dt_txt.split(' ')[0], apiData)}</p>
+                        </Styled.ContainerSingleDay>
+                        : ''
+                    ) 
+                }
+            </Styled.Container>
+        )
 
-            {apiData && apiData.length > 0 ? apiData.map((forecast: any, index: number) =>
-                Number.isInteger(index / 8) ? 
-                    <Styled.ContainerSingleDay
-                        onClick={(e) => handleSelectEvent(e)}
-                        onKeyDown={(e) => {if (e.key === 'Enter') handleSelectEvent(e)}}
-                        tabIndex={0}
-                        data-date={forecast.dt_txt}
-                        data-dayname={getDayName(index / 8)}
-                        data-day={index}
-                        data-is-open={forecastState[index] ? 'true' : 'false'}
-                    >
-                        <p>{getDayName(index / 8)}</p>
-                        {getWeatherIcon(
-                            getMostCommonItem(forecast.dt_txt.split(' ')[0], 'icon')
-                        )}
-                        <p>{getMostCommonItem(forecast.dt_txt.split(' ')[0], 'description')}</p>
-                        <p>{getMaxMinTemp(forecast.dt_txt.split(' ')[0], apiData)}</p>
-                    </Styled.ContainerSingleDay>
-                    : ''
-                ) : ''
-            }
-        </Styled.Container>
-    )
+    } else return null
 }

@@ -5,12 +5,16 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { setGraphData, optionsGraphTemp } from './BannerForecastHoursGraph'
 import { useState } from 'react'
 import React from 'react'
+import { IApiForecastResponse } from '../../assets/interfaces/interfaces'
+import { formatedDayTime } from '../../assets/utils/utils'
 
-export function BannerForecastHours({apiData, displayedDayHour, displayedDayName, updateSelectedDayHour}: {
-        apiData: any, 
-        displayedDayHour: string, 
+
+
+export function BannerForecastHours({apiData, displayedDayTime, displayedDayName, handleClickHour}: {
+        apiData: IApiForecastResponse[], 
+        displayedDayTime: string, 
         displayedDayName: string, 
-        updateSelectedDayHour: Function
+        handleClickHour: Function
     }) {
 
     // The selected hour
@@ -20,25 +24,37 @@ export function BannerForecastHours({apiData, displayedDayHour, displayedDayName
     const [selectedGraphType, setSelectedGraphType] = useState<"rain" | "temp" | "wind">("temp")
 
     // The forecast for the selected day and hour
-    const [forecastEightHours, setEightHoursForecast] = useState<any>(null)
+    const [forecastEightHours, setEightHoursForecast] = useState<IApiForecastResponse[] | null>(null)
 
     // Updates selected forecast state when the date and hour to dispay change
     React.useEffect(() => {
-        setEightHoursForecast(getEightHoursForecast(apiData))
-    }, [displayedDayHour])
+
+        if (forecastEightHours === null 
+            || !forecastEightHours.some((forecast) => forecast.dt_txt === displayedDayTime)
+            || displayedDayTime.includes('midnight')) {
+            const dayTime: string = formatedDayTime(displayedDayTime)
+            setEightHoursForecast(getEightHoursForecast(apiData, dayTime))
+            setSelectedHourNum("0")
+        }
+    }, [displayedDayTime, apiData])
+
+    // Updates selected forecast state when the date and hour to dispay change
+    React.useEffect(() => {
+        setSelectedHourNum("0")
+    }, [apiData])
 
     /**
      * Gets forecast for corresponding 8 hours of the dispayed date
      * @param  {any} apiData [The data from the api]
      * @return {any[]}       [Array with the 8 corresponding forecasts]
      */
-    const getEightHoursForecast = (apiData: any): any[] => {
+    const getEightHoursForecast = (apiData: IApiForecastResponse[], dayTime: string): any[] => {
         let dayIsFound: boolean = false
         const displayedForecasts: any[] = []
         let count: number = 0
 
         for (const forecast of apiData) {
-            if (forecast.dt_txt === displayedDayHour && dayIsFound === false) {
+            if (forecast.dt_txt === dayTime && dayIsFound === false) {
                 dayIsFound = true
                 displayedForecasts.push(forecast)
                 count++
@@ -60,7 +76,7 @@ export function BannerForecastHours({apiData, displayedDayHour, displayedDayName
 
         if (elTarget !== null) {
             setSelectedHourNum(elTarget.getAttribute("data-hour") as string)
-            updateSelectedDayHour(elTarget.getAttribute("data-day-hour"))
+            handleClickHour(elTarget.getAttribute("data-day-time"))
         }
     }
 
@@ -81,6 +97,8 @@ export function BannerForecastHours({apiData, displayedDayHour, displayedDayName
      * @return  {JSX.Element}   : The graph template
      */
     const generateGraphTemplate = (graphType: string): JSX.Element | null => {
+        if (!forecastEightHours) return null
+
         const chartData = forecastEightHours.map((forecast: any, index: number) => {
             switch (graphType) {
                 case "temp":
@@ -96,7 +114,7 @@ export function BannerForecastHours({apiData, displayedDayHour, displayedDayName
 
         if (forecastEightHours) {
             return  (
-                <Styled.GraphContainer>
+                <Styled.ContainerGraph>
                     <div>
                         <Line 
                             // @ts-ignore
@@ -105,7 +123,7 @@ export function BannerForecastHours({apiData, displayedDayHour, displayedDayName
                             data={setGraphData(chartData, graphType)} 
                         />                    
                     </div>
-                </Styled.GraphContainer>
+                </Styled.ContainerGraph>
             )
         } else return null
     }
@@ -149,26 +167,28 @@ export function BannerForecastHours({apiData, displayedDayHour, displayedDayName
                     {`HOURLY FORECAST FOR ${displayedDayName.toUpperCase()}`}
                 </Styled.Title>
                 {generateButtonsTemplate()}
-                <Styled.Wrap>
-                    {   // Loops on the apiData to retrieve the needed data and display the forecasts
-                        apiData && apiData.length > 0 ? forecastEightHours.map((forecast: any, index: number) =>
-                            index < 8 ? 
-                                <Styled.HourForecastContainer
-                                    onClick={(e) => handleSelectEvent(e)}
-                                    onKeyDown={(e) => {if (e.key === 'Enter') handleSelectEvent(e)}}
-                                    tabIndex={0}
-                                    data-hour={index}
-                                    data-is-selected={index.toString() === selectedHourNum ? "true" : "false"}
-                                    data-day-hour={forecast.dt_txt}
-                                >
-                                    <p>{`${forecast.dt_txt.split(" ")[1].split(":")[0]}:00h`}</p>
-                                    {getWeatherIcon(forecast.weather[0].icon)}
-                                </Styled.HourForecastContainer>
-                                : ""
-                        ) : ""
-                    }
-                </Styled.Wrap>
-                {generateGraphTemplate(selectedGraphType)}
+                <Styled.ContainerHoursAndGraph>
+                    <Styled.ContainerHours>
+                        {   // Loops on the apiData to retrieve the needed data and display the forecasts
+                            apiData && apiData.length > 0 ? forecastEightHours.map((forecast: any, index: number) =>
+                                index < 8 ? 
+                                    <Styled.HourForecastContainer
+                                        onClick={(e) => handleSelectEvent(e)}
+                                        onKeyDown={(e) => {if (e.key === 'Enter') handleSelectEvent(e)}}
+                                        tabIndex={0}
+                                        data-hour={index}
+                                        data-is-selected={index.toString() === selectedHourNum ? "true" : "false"}
+                                        data-day-time={forecast.dt_txt}
+                                    >
+                                        <p>{`${forecast.dt_txt.split(" ")[1].split(":")[0]}:00h`}</p>
+                                        {getWeatherIcon(forecast.weather[0].icon)}
+                                    </Styled.HourForecastContainer>
+                                    : ""
+                            ) : ""
+                        }
+                    </Styled.ContainerHours>
+                    {generateGraphTemplate(selectedGraphType)}
+                </Styled.ContainerHoursAndGraph>
             </Styled.Container>
         )
 

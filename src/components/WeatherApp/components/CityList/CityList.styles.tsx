@@ -18,6 +18,7 @@ export const Wrap = styled.ul`
     left: 0;
     width: 100%;
     margin: 0;
+    margin-top: calc(var(--mg-between-components) * -1);
     padding: 10px 0 20px;
     font-size: var(--fs-base);
     box-shadow: var(--input-bs-focus);
