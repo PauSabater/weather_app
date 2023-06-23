@@ -1,10 +1,16 @@
-# Getting Started with Create React App
+# Use the WeatherApp component on your project as a package
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Install the package
 
-## Available Scripts
+`npm install @pausabater/weather-app-ps`
 
-In the project directory, you can run:
+## Import the component
+
+`import {WeatherApp} from @pausabater/weather-app-ps/components`
+
+## Add the wordings
+
+# Running the full repository instead of the package
 
 ### `npm start`
 

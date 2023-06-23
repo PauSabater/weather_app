@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+# npm install
+.npmrc
+.npmignore
+
 # testing
 /coverage
 
