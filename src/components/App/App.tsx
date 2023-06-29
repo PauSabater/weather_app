@@ -1,14 +1,15 @@
-import { texts } from "../../assets/ts/texts/texts"
+import { texts } from "../../assets/texts/texts"
 import './App.css'
 import '../../assets/scss/classes.scss'
 import '../../assets/scss/fonts.scss'
-import { WeatherApp } from '../WeatherApp/components/WeatherApp/WeatherApp'
+import React from 'react'
+import { WeatherApp } from "../../exports"
 
 function App() {
 
     return (
         <div className="main">
-            <WeatherApp texts={ texts.weatherApp }></WeatherApp>
+            <WeatherApp texts={ texts }></WeatherApp>
         </div>
     )
 }

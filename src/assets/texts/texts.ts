@@ -1,14 +1,5 @@
-## Import the component on a React project
+import { IWeatherAppTexts } from "../../components/WeatherApp/index.types"
 
-### As commonJS module
-`import { WeatherApp } from 'weather-app-ps/dist/cjs'`
-
-### As ES module
-`import { WeatherApp } from 'weather-app-ps/dist/cjs'`
-
-## Set an object for the texts
-### Example
-```
 export const texts: IWeatherAppTexts = {
     cityFinderTexts: {
         placeholder: "Enter your city",
@@ -30,7 +21,3 @@ export const texts: IWeatherAppTexts = {
         wind: "Wind"
     }
 }
-```
-
-## Use the component
-`<WeatherApp texts={texts}></WeatherApp>`
