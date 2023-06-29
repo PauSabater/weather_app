@@ -109,8 +109,8 @@ export function BannerForecastDays({apiData, handleClickDay, texts}: {
                 {apiData.map((forecast: IApiForecastResponse, index: number) =>
                     Number.isInteger(index / 8) ?
                         <Styled.ContainerSingleDay
-                            onClick={(e) => handleSelectEvent(e)}
-                            onKeyDown={(e) => {if (e.key === 'Enter') handleSelectEvent(e)}}
+                            onClick={(e: React.KeyboardEvent<HTMLLIElement> | React.MouseEvent<HTMLLIElement, MouseEvent>) => handleSelectEvent(e)}
+                            onKeyDown={(e: React.KeyboardEvent<HTMLLIElement>) => {if (e.key === 'Enter') handleSelectEvent(e)}}
                             tabIndex={0}
                             data-day-time={index === 0 ? forecast.dt_txt : `${forecast.dt_txt.split(' ')[0]} midnight` }
                             data-dayname={getDayName(index / 8)}

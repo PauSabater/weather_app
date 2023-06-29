@@ -139,21 +139,21 @@ export function BannerForecastHours({texts, apiData, displayedDayTime, displayed
             <Styled.ButtonsWrap>
                 <Styled.ForecastButton
                     data-type={"temp"}
-                    onClick={(e) => handleButtonEvent(e)}
+                    onClick={(e: React.KeyboardEvent<HTMLElement> | React.MouseEvent<HTMLElement, MouseEvent>) => handleButtonEvent(e)}
                     data-active={selectedGraphType === "temp" ? "true" : "false"}
                 >
                     {texts.btnTemp}
                 </Styled.ForecastButton>
                 <Styled.ForecastButton
                     data-type={"rain"}
-                    onClick={(e) => handleButtonEvent(e)}
+                    onClick={(e: React.KeyboardEvent<HTMLElement> | React.MouseEvent<HTMLElement, MouseEvent>) => handleButtonEvent(e)}
                     data-active={selectedGraphType === "rain" ? "true" : "false"}
                 >
                     {texts.btnRain}
                 </Styled.ForecastButton>
                 <Styled.ForecastButton
                     data-type={"wind"}
-                    onClick={(e) => handleButtonEvent(e)}
+                    onClick={(e: React.KeyboardEvent<HTMLElement> | React.MouseEvent<HTMLElement, MouseEvent>) => handleButtonEvent(e)}
                     data-active={selectedGraphType === "wind" ? "true" : "false"}
                 >
                     {texts.btnWind}
@@ -176,8 +176,8 @@ export function BannerForecastHours({texts, apiData, displayedDayTime, displayed
                                 index < 8 ?
                                     <Styled.HourForecastContainer
                                         key={`id-hour-forecast-${index}`}
-                                        onClick={(e) => handleSelectEvent(e)}
-                                        onKeyDown={(e) => {if (e.key === 'Enter') handleSelectEvent(e)}}
+                                        onClick={(e: React.KeyboardEvent<HTMLElement> | React.MouseEvent<HTMLElement, MouseEvent>) => handleSelectEvent(e)}
+                                        onKeyDown={(e: React.KeyboardEvent<HTMLElement>) => {if (e.key === 'Enter') handleSelectEvent(e)}}
                                         tabIndex={0}
                                         data-hour={index}
                                         data-is-selected={index.toString() === selectedHourNum ? "true" : "false"}
