@@ -2,7 +2,7 @@ import resolve from "@rollup/plugin-node-resolve"
 import commonjs from "@rollup/plugin-commonjs"
 import typescript from "@rollup/plugin-typescript"
 import dts from "rollup-plugin-dts"
-import { terser } from "rollup-plugin-terser"
+import terser from '@rollup/plugin-terser'
 import peerDepsExternal from "rollup-plugin-peer-deps-external"
 import sourcemaps from "rollup-plugin-sourcemaps"
 
@@ -30,7 +30,7 @@ export default [
       peerDepsExternal(),
       resolve(),
       commonjs(),
-      typescript({ tsconfig: "./tsconfig.json" }),
+      typescript({ sourceMap: true, tsconfig: "./tsconfig.json" }),
       sourcemaps(),
       terser(),
     ],
@@ -39,6 +39,6 @@ export default [
   {
     input: "src/exports.tsx",
     output: [{ file: "dist/types.d.ts", format: "es" }],
-    plugins: [dts()],
+    plugins: [dts.default()],
   },
 ]
