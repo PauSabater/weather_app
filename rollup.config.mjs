@@ -4,7 +4,7 @@ import typescript from "@rollup/plugin-typescript"
 import dts from "rollup-plugin-dts"
 import { terser } from "rollup-plugin-terser"
 import peerDepsExternal from "rollup-plugin-peer-deps-external"
-import svgr from '@svgr/rollup'
+import sourcemaps from "rollup-plugin-sourcemaps"
 
 import packageJson from './package.json' assert {
   type: 'json',
@@ -31,6 +31,7 @@ export default [
       resolve(),
       commonjs(),
       typescript({ tsconfig: "./tsconfig.json" }),
+      sourcemaps(),
       terser(),
     ],
     external: ["react", "react-dom", "styled-components"],
@@ -38,6 +39,6 @@ export default [
   {
     input: "src/exports.tsx",
     output: [{ file: "dist/types.d.ts", format: "es" }],
-    plugins: [dts(), svgr({ icon: true })],
+    plugins: [dts()],
   },
 ]

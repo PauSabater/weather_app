@@ -1,15 +1,20 @@
 // https://rapidapi.com/wirefreethought/api/geodb-cities
 
-import { ChangeEvent, useState, useCallback, useRef } from "react"
+import { ChangeEvent, useState, useCallback, useRef, Fragment } from "react"
 import { InputText } from "../InputText/InputText"
 import { CityList } from "../CityList/CityList"
 import throttle from "lodash.throttle"
 import * as Styled from "./CityFinder.styles"
-import { ICitiesData, ICityFinder } from "../../assets/interfaces/interfaces"
+import { ICitiesData } from "../../assets/interfaces/interfaces"
 import React from 'react'
+import { ICityFinderTexts } from "../WeatherApp/index.types"
+import { formatFirstCharacterUpperCase } from "../../assets/utils/utils"
 
 
-export function CityFinder({cityFinderTexts, updateCityApiResult}: {cityFinderTexts: ICityFinder, updateCityApiResult: any}) {
+export function CityFinder({texts, updateCityApiResult}: {
+        texts: ICityFinderTexts,
+        updateCityApiResult: Function
+    }) {
 
     const [citiesData, setCitiesData] = useState<ICitiesData[]>(
         [{
@@ -25,6 +30,12 @@ export function CityFinder({cityFinderTexts, updateCityApiResult}: {cityFinderTe
     const [inputText, setInputText] = useState<string>('')
     const [isListOpen, setIsListOpen] = useState<boolean>(false)
     const [isTypingAllowed, setIsTypingAllowed] = useState<boolean>(true)
+    const [isErrorDisplayed, setIsErrorDisplayed] = useState<boolean>(false)
+
+    // Display error if list is closed and typing is allowed (as the input value has not been added)
+    React.useEffect(() => {
+        if (!isListOpen && isTypingAllowed) setIsErrorDisplayed(true)
+    }, [isListOpen])
 
     // Store function in order to prevent it executing on each re-render
     const throttleFn = useCallback(throttle((city: string)=> makeApiRequestT(city), 1500), [])
@@ -62,7 +73,6 @@ export function CityFinder({cityFinderTexts, updateCityApiResult}: {cityFinderTe
                             continue
                     }
 
-                    const cityItem: string = `${cityData.name}, ${cityData.country}`
                     citiesList.push({
                         country: cityData.country,
                         name: cityData.name,
@@ -86,14 +96,20 @@ export function CityFinder({cityFinderTexts, updateCityApiResult}: {cityFinderTe
         const value = event.target.value
 
         if (value.length > 2) {
-            throttleFn(value)
+
+            throttleFn(formatFirstCharacterUpperCase(value))
             setInputText(value)
-            setIsListOpen(true)
+            if (citiesData.length > 0) {
+                setIsListOpen(true)
+                setIsErrorDisplayed(false)
+            }
             setInputText(value)
 
+        // If there is no text, reset the data, close the list and set error message
         } else if (value.length === 0) {
             setCitiesData([])
             setIsListOpen(false)
+            setIsErrorDisplayed(false)
         }
     }
 
@@ -112,15 +128,25 @@ export function CityFinder({cityFinderTexts, updateCityApiResult}: {cityFinderTe
             longitude: event.target.getAttribute("data-longitude") || "",
             name: event.target.innerHTML || "",
         })
+
+        setIsErrorDisplayed(false)
     }
 
     /**
      * Sets the actions when input is focused
+     * @param  {Event} e     [The event passed on focus]
      */
-    const handleInputFocusEvent = (): void => {
+    const handleInputFocusEvent = (e: Event): void => {
+        const elTarget: HTMLInputElement = e.target as HTMLInputElement
+
         // This value will make the attribute value from the input not be overwriten
         setIsTypingAllowed(true)
-        setIsListOpen(true)
+
+        // Only open list if there is data on the city response and more than 2 characters are typed
+        if (citiesData.length > 0 && elTarget.value.length > 2) {
+            setIsListOpen(true)
+            setIsErrorDisplayed(false)
+        }
     }
 
     /**
@@ -128,6 +154,8 @@ export function CityFinder({cityFinderTexts, updateCityApiResult}: {cityFinderTe
      * @param  {Event} e     [The event passed on click]
      */
     const handleClickOutside = (e: MouseEvent) => {
+        e.stopPropagation()
+
         const currentListEl: HTMLElement | null = elementListRef.current
         const currentInputEl: HTMLElement | null = elementInputRef.current
 
@@ -149,13 +177,16 @@ export function CityFinder({cityFinderTexts, updateCityApiResult}: {cityFinderTe
             >
                 <InputText
                     handleInputChangeEvent={handleInputChangeEvent}
-                    placeholder={cityFinderTexts.placeholder}
-                    name={cityFinderTexts.name}
+                    placeholder={texts.placeholder}
+                    name={"cityfinder-input"}
                     handleInputFocusEvent={handleInputFocusEvent}
                     textSelected={inputText}
                     allowTyping={isTypingAllowed}
-                    isExpanded={isListOpen}
+                    isExpanded={isListOpen && citiesData.length > 0}
                 ></InputText>
+                {isErrorDisplayed
+                    ? <Styled.ErrorMessage>Please select a city from the list</Styled.ErrorMessage>
+                    : <Fragment></Fragment>}
             </Styled.Wrap>
             <Styled.Wrap
                 ref={elementListRef}>
@@ -164,7 +195,7 @@ export function CityFinder({cityFinderTexts, updateCityApiResult}: {cityFinderTe
                         citiesData={citiesData}
                         handleListClickSelect={handleListClickSelect}
                     ></CityList>
-                    : ''
+                    : <Fragment></Fragment>
                 }
             </Styled.Wrap>
         </Styled.Container>

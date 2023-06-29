@@ -1,17 +1,23 @@
+import { IWeatherAppTexts } from "../../components/WeatherApp/index.types"
 
-export const texts = {
-    topBanner: {
-        title: "Creative?",
-        lines: ["FRONTEND", "DEVELOPER"]
+export const texts: IWeatherAppTexts = {
+    cityFinderTexts: {
+        placeholder: "Enter your city",
+        errorMessage: "Please select a city from the list"
     },
-    intro: {
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    bannerForecastDaysTexts: {
+        title: "5 DAY FORECAST"
     },
-    weatherApp: {
-        cityFinderTexts: {
-            placeholder: "Enter your city",
-            label: "Please enter your city",
-            name: "Name hello"
-        }
+    bannerForecastHoursTexts: {
+        title: "5 DAY FORECAST FOR",
+        btnTemp: "TEMPERATURE (C)",
+        btnRain: "RAIN (MM)",
+        btnWind: "WIND (KM/H)",
+    },
+    bannerAirConditionsTexts: {
+        title: "AIR CONDITIONS",
+        feelsLike: "Feels like",
+        humidity: "Humidity",
+        wind: "Wind"
     }
 }

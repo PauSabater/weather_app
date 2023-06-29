@@ -1,18 +1,19 @@
-import { useState } from "react"
-import { IApiForecastResponse, ICitiesData, IWeatherAppTexts } from "../../assets/interfaces/interfaces"
+import { Fragment, useState } from "react"
+import { IApiForecastResponse, ICitiesData } from "../../assets/interfaces/interfaces"
+import * as Styled from "./WeatherApp.styles"
 import { BannerSelectedWeather } from "../BannerSelectedWeather/BannerSelectedWeather"
 import { CityFinder } from "../CityFinder/CityFinder"
-import * as Styled from "./WeatherApp.styles"
 import { BannerForecastHours } from "../BannerForecastHours/BannerForecastHours"
 import { BannerAirConditions } from "../BannerAirConditions/BannerAirConditions"
 import { BannerForecastDays } from "../BannerForecastDays/BannerForecastDays"
 import { weatherAppStyles } from "./WeatherAppStylesExport"
 import React from 'react'
+import { IWeatherAppTexts } from "./index.types"
 
 
-
-
-export function WeatherApp({ texts }: { texts: IWeatherAppTexts }) {
+export function WeatherApp({ texts }: {
+        texts: IWeatherAppTexts
+    }): React.JSX.Element {
 
     // State for the cities api response
     const [cityApiData, setCityApiData] = useState<ICitiesData>(
@@ -33,7 +34,6 @@ export function WeatherApp({ texts }: { texts: IWeatherAppTexts }) {
     // The displayed day name
     const [displayedDayName, setDisplayedDayName] = useState<string>("TODAY")
 
-
     /**
      * Updates the resunt from the Cities Api
      * @param  {ICitiesData} cityData  : The data received from the api
@@ -53,7 +53,7 @@ export function WeatherApp({ texts }: { texts: IWeatherAppTexts }) {
 
     /**
      * Updates the displayed day after click on day forecast container
-     * @param  {Event} e       : The event passed on click
+     * @param  {Event} e             : The event passed on click
      */
     const handleClickDay = (e: Event): void => {
         const elTarget: HTMLElement = e.target as HTMLElement
@@ -63,7 +63,13 @@ export function WeatherApp({ texts }: { texts: IWeatherAppTexts }) {
         }
     }
 
-    const makeWeatherApiRequest = async (latitude: string, longitude: string)=> {
+    /**
+     * Makes the api request to get the weather for the next 5 days
+     * @param  {string} latitude     : The city location latitude
+     * @param  {string} longitude    : The city location longitude
+     * @returns {Promise<void>}      : promise for the api request
+     */
+    const makeWeatherApiRequest = async (latitude: string, longitude: string): Promise<void> => {
 
         const options = {
             method: 'GET',
@@ -71,16 +77,9 @@ export function WeatherApp({ texts }: { texts: IWeatherAppTexts }) {
         }
 
         try {
-            let urls = [
-                `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=22701db4524b58c1f26b55888022c05b`,
-                `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=22701db4524b58c1f26b55888022c05b`
-            ]
-
-            // map every url to the promise of the fetch
-            const requests = urls.map(url => fetch(url))
-            const responses: Response[] = await Promise.all(requests)
-            const currentWeatherResponse =  await JSON.parse(await responses[0].text())
-            const forecastWeatherResponse =  await JSON.parse(await responses[1].text())
+            const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=22701db4524b58c1f26b55888022c05b`
+            const response: Response = await fetch(url, options)
+            const forecastWeatherResponse: any =  await JSON.parse(await response.text())
 
             // Saves the forecast returned data:
             setForecastApiData(forecastWeatherResponse.list)
@@ -92,47 +91,59 @@ export function WeatherApp({ texts }: { texts: IWeatherAppTexts }) {
         }
     }
 
+    /**
+     * Returns the template for the results
+     * @returns {React.JSX.Element | null}      : Template or null if api results are not set
+     */
+    const displayResultsTemplate = (): React.JSX.Element | null => {
+        if (forecastApiData)
+            return (
+                <Fragment>
+                    <Styled.WrapFirstColumn>
+                        <Styled.WrapCurrentConditions>
+                            <BannerSelectedWeather
+                                apiData={forecastApiData}
+                                displayedDayTime={displayedDayTime}
+                                displayedDayName={displayedDayName}
+                                city={cityApiData.name}
+                            ></BannerSelectedWeather>
+                            <BannerAirConditions
+                                texts={texts.bannerAirConditionsTexts}
+                                apiData={forecastApiData}
+                                displayedDayTime={displayedDayTime}
+                            ></BannerAirConditions>
+                            <BannerForecastHours
+                                texts={texts.bannerForecastHoursTexts}
+                                apiData={forecastApiData}
+                                displayedDayTime={displayedDayTime}
+                                displayedDayName={displayedDayName}
+                                handleClickHour={handleClickHour}
+                            ></BannerForecastHours>
+                        </Styled.WrapCurrentConditions>
+                    </Styled.WrapFirstColumn>
+                        <Styled.WrapBannerForecastNextDays>
+                            <BannerForecastDays
+                                texts={texts.bannerForecastDaysTexts}
+                                apiData={forecastApiData}
+                                handleClickDay={handleClickDay}
+                            ></BannerForecastDays>
+                        </Styled.WrapBannerForecastNextDays>
+                </Fragment>
+            )
+
+        else return null
+    }
+
     return (
         <Styled.WrapMain>
             <style>{weatherAppStyles}</style>
             <div className="container-parent-webb-app">
                 <div className="container-child-webb-app">
                     <CityFinder
-                        cityFinderTexts={texts.cityFinderTexts}
+                        texts={texts.cityFinderTexts}
                         updateCityApiResult={updateCityApiResult}
                     ></CityFinder>
-                    <Styled.WrapFirstColumn>
-                        {forecastApiData ?
-                            <Styled.WrapCurrentConditions>
-                                <BannerSelectedWeather
-                                    apiData={forecastApiData}
-                                    displayedDayTime={displayedDayTime}
-                                    displayedDayName={displayedDayName}
-                                    city={cityApiData.name}
-                                ></BannerSelectedWeather>
-                                <BannerAirConditions
-                                    apiData={forecastApiData}
-                                    displayedDayTime={displayedDayTime}
-                                ></BannerAirConditions>
-                                <BannerForecastHours
-                                    apiData={forecastApiData}
-                                    displayedDayTime={displayedDayTime}
-                                    displayedDayName={displayedDayName}
-                                    handleClickHour={handleClickHour}
-                                ></BannerForecastHours>
-                            </Styled.WrapCurrentConditions>
-                            : ""
-                        }
-                    </Styled.WrapFirstColumn>
-                    {forecastApiData ?
-                        <Styled.WrapBannerForecastNextDays>
-                            <BannerForecastDays
-                                apiData={forecastApiData}
-                                handleClickDay={handleClickDay}
-                            ></BannerForecastDays>
-                        </Styled.WrapBannerForecastNextDays>
-                        : ""
-                    }
+                    {displayResultsTemplate()}
                 </div>
             </div>
         </Styled.WrapMain>

@@ -12,13 +12,19 @@ export function getUniqueValuesFromArray(array: string[]) {
         // Substract single values
         if (arraySingleValues.length === 0 || arraySingleValues.filter((val) => val === value).length === 0) {
             arraySingleValues.push(value)
-        }  
+        }
     }
 
     return arraySingleValues
 }
 
-export function getHighestCountPosition(arrayUniqueItems: string[], arrayToCount: string[]) {
+/**
+ * Gets the highest count position from an array from a list of unique keys
+ * @param  {string[]} arrayUniqueItems       : Array of the keys to count
+ * @param  {string[]} arrayToCount           : Array to count
+ * @return {number}                          : The position from arrayUniqueItems where items are most repeated
+ */
+export function getHighestCountPosition(arrayUniqueItems: string[], arrayToCount: string[]): number {
     const arrayCount: number[] = []
 
     for (const item of arrayUniqueItems) {
@@ -35,6 +41,11 @@ export function getHighestCountPosition(arrayUniqueItems: string[], arrayToCount
     return count
 }
 
+/**
+ * Returns the day name locale from the number of days ahead of today
+ * @param  {number} daysAhead       : The days ahead of today
+ * @return {string}                 : The day name string
+ */
 export function getDayName(daysAhead: number): string {
 
     if (daysAhead === 0) return 'Today'
@@ -59,9 +70,32 @@ export const getSpecificForecast = (displayedDayTime: string, apiData: IApiForec
     return null
 }
 
+/**
+ * If a dayTime string includes the keyword 'midnight' return a formated string
+ * @param  {string} dayTime        : the string to format
+ * @return {string}                : formated string
+ */
+export const formatedDayTime = (dayTime: string): string => {
+    console.log(dayTime)
+    return dayTime.includes('midnight')
+        ? `${dayTime.split(' ')[0]} 00:00:00`
+        : dayTime
+}
 
-export const formatedDayTime = (displayedDayTime: string): string => {
-    return displayedDayTime.includes('midnight')
-        ? `${displayedDayTime.split(' ')[0]} 00:00:00`
-        : displayedDayTime
+/**
+ * Formats a value so that first character is uppercase and the rest is lowercase
+ * @param  {string} value        : the string to format
+ * @return {string}              : formated string
+ */
+export function formatFirstCharacterUpperCase(value: string): string {
+    if (value.includes(' ')) {
+        const formatedString = value.split(' ')[0].toLowerCase()
+        const firstWord = formatedString.charAt(0).toUpperCase() + formatedString.slice(1)
+        return `${firstWord} ${value.substring(value.indexOf(' ')+1)}`
+    } else {
+        console.log('value is', value)
+        value = value.toLowerCase()
+        console.log('value is now', value)
+        return value.charAt(0).toUpperCase() + value.slice(1)
+    }
 }

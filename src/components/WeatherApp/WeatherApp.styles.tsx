@@ -1,4 +1,3 @@
-import { keyframes } from 'styled-components'
 import styled from 'styled-components'
 import { colors } from '../../assets/styles/Common.styles'
 

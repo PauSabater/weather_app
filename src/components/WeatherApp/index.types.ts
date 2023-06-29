@@ -1,16 +1,29 @@
 export interface IWeatherAppTexts {
-    weatherApp: {
-        cityFinderTexts: {
-            placeholder: "Enter your city",
-            label: "Please enter your city",
-            name: "Name hello"
-        }
-    }
+    cityFinderTexts: ICityFinderTexts,
+    bannerForecastDaysTexts: IBannerForecastDaysTexts,
+    bannerForecastHoursTexts: IBannerForecastHoursTexts,
+    bannerAirConditionsTexts: IBannerAirConditionsTexts
 }
 
 export interface ICityFinderTexts {
-    placeholder: "Enter your city",
-    label: "Please enter your city",
-    name: "Name hello"
+    placeholder: string,
+    errorMessage: string
 }
 
+export interface IBannerForecastDaysTexts {
+    title: string
+}
+
+export interface IBannerForecastHoursTexts {
+    title: string,
+    btnTemp: string,
+    btnRain: string,
+    btnWind: string
+}
+
+export interface IBannerAirConditionsTexts {
+    title: string,
+    feelsLike: string,
+    humidity: string,
+    wind: string
+}

@@ -1,7 +1,7 @@
 export interface ICitiesData {
     country: string,
     name: string,
-    latitude: string, 
+    latitude: string,
     longitude: string
 }
 
@@ -17,17 +17,9 @@ export interface ICurrentWeatherApiData {
     windAngle: string
 }
 
-export interface IWeatherAppTexts {
-    cityFinderTexts: {
-        placeholder: string,
-        label: string, 
-        name: string
-    }
-}
-
 export interface ICityFinder {
-    placeholder: string, 
-    label: string, 
+    placeholder: string,
+    label: string,
     name: string
 }
 

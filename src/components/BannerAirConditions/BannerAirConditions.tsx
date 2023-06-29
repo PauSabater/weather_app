@@ -1,13 +1,13 @@
 import { useState } from "react"
-
 import * as Styled from './BannerAirConditions.styles'
 import React from "react"
 import { formatedDayTime, getSpecificForecast } from "../../assets/utils/utils"
 import { IApiForecastResponse } from "../../assets/interfaces/interfaces"
+import { IBannerAirConditionsTexts } from "../WeatherApp/index.types"
 
 
-
-export function BannerAirConditions({apiData, displayedDayTime}: {
+export function BannerAirConditions({texts, apiData, displayedDayTime}: {
+        texts: IBannerAirConditionsTexts,
         apiData: IApiForecastResponse[],
         displayedDayTime: string
     }) {
@@ -21,17 +21,15 @@ export function BannerAirConditions({apiData, displayedDayTime}: {
         setSelectedForecast(getSpecificForecast(dayTime, apiData))
     }, [displayedDayTime])
 
-    // const [isInputInitialised, setIsInputInitialised] = useState<boolean>(false)
-
     //https://iconscout.com/lotties/weather
 
     if (selectedForecast !== null) {
         return (
             <Styled.Container>
-                <Styled.Title>AIR CONDITIONS</Styled.Title>
-                <p>Feels like: {`${Math.round(selectedForecast.main.feels_like)}°`}</p>
-                <p>Humidity: {`${selectedForecast.main.humidity}%`}</p>
-                <p>Wind: {`${Math.round(selectedForecast.wind.gust)}km/h`}</p>
+                <Styled.Title>{texts.title}</Styled.Title>
+                <p>{`${texts.feelsLike} ${Math.round(selectedForecast.main.feels_like)}°`}</p>
+                <p>{`${texts.humidity} ${selectedForecast.main.humidity}%`}</p>
+                <p>{`${texts.wind} ${Math.round(selectedForecast.wind.gust)}km/h`}</p>
             </Styled.Container>
         )
 

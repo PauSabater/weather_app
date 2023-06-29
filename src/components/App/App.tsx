@@ -9,7 +9,7 @@ function App() {
 
     return (
         <div className="main">
-            <WeatherApp texts={ texts.weatherApp }></WeatherApp>
+            <WeatherApp texts={ texts }></WeatherApp>
         </div>
     )
 }

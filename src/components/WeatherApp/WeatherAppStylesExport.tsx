@@ -1,3 +1,7 @@
+/*
+ * These styles are injected directly in the component with a <style> tag in order to be able
+ * to use container queries
+ */
 export const weatherAppStyles = `
     .container-parent-webb-app {
         /* padding */
@@ -44,6 +48,7 @@ export const weatherAppStyles = `
         --fs-lg: 1.5rem;
         --fs-base: 1.1rem;
         --fs-sm: 1rem;
+        --fs-xs: 0.9rem;
 
         --fc-dark: hsl(0, 0%, 5%);
         --fc-global: hsl(0, 0%, 20%);

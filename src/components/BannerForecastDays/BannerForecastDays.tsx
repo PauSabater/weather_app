@@ -5,19 +5,16 @@ import { getWeatherIcon } from "../../assets/utils/svg"
 import { IApiForecastResponse } from "../../assets/interfaces/interfaces"
 import React from "react"
 import parse from 'html-react-parser'
+import { IBannerForecastDaysTexts } from "../WeatherApp/index.types"
 
 
-export function BannerForecastDays({apiData, handleClickDay}: {
+export function BannerForecastDays({apiData, handleClickDay, texts}: {
         apiData: IApiForecastResponse[],
-        handleClickDay: Function
+        handleClickDay: Function,
+        texts: IBannerForecastDaysTexts
     }) {
 
-    // const [isInputInitialised, setIsInputInitialised] = useState<boolean>(false)
-
-    //https://iconscout.com/lotties/weather
-
-
-    // State to be used on initial selection
+            // State to be used on initial selection
     const initialForecastState = {
         "0": true,
         "1": false,
@@ -34,7 +31,13 @@ export function BannerForecastDays({apiData, handleClickDay}: {
 
     // Restarts day selection on data update
     React.useEffect(() => {
-        setForecastState(initialForecastState)
+        setForecastState({
+            "0": true,
+            "1": false,
+            "2": false,
+            "3": false,
+            "4": false
+        })
     }, [apiData])
 
     // Keeps the selected elements state
@@ -101,7 +104,7 @@ export function BannerForecastDays({apiData, handleClickDay}: {
     if (apiData !== null && apiData.length > 0) {
         return (
             <Styled.Container>
-                <Styled.Title>5 DAY FORECAST</Styled.Title>
+                <Styled.Title>{texts.title}</Styled.Title>
 
                 {apiData.map((forecast: IApiForecastResponse, index: number) =>
                     Number.isInteger(index / 8) ?
@@ -113,6 +116,7 @@ export function BannerForecastDays({apiData, handleClickDay}: {
                             data-dayname={getDayName(index / 8)}
                             data-day={index}
                             data-is-open={forecastState[index] ? 'true' : 'false'}
+                            key={`id-day-forecast-${index}`}
                         >
                             <p>{getDayName(index / 8)}</p>
                             {parse(getWeatherIcon(

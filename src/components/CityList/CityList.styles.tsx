@@ -23,7 +23,7 @@ export const Wrap = styled.ul`
     font-size: var(--fs-base);
     box-shadow: var(--input-bs-focus);
     border-radius: 0 0 calc(var(--input-height)/2) calc(var(--input-height)/2);
-    z-index: 1;
+    z-index: 20;
     background-color: var(--bg-main);
 `
 

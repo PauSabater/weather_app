@@ -39,8 +39,8 @@ export function InputText({
                 aria-expanded={isExpanded}
                 aria-controls="list-cities"
                 {...(
-                    textSelected && allowTyping === false && { value: textSelected })
-                }
+                    textSelected && allowTyping === false && { value: textSelected }
+                )}
             ></Styled.Input>
         </Styled.Wrap>
     )

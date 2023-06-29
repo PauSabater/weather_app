@@ -1,1 +1,6 @@
 export { WeatherApp } from "../src/components/WeatherApp/WeatherApp"
+export { CityFinder } from "../src/components/CityFinder/CityFinder"
+export { BannerAirConditions } from "../src/components/BannerAirConditions/BannerAirConditions"
+export { BannerForecastDays } from "../src/components/BannerForecastDays/BannerForecastDays"
+export { BannerForecastHours } from "../src/components/BannerForecastHours/BannerForecastHours"
+export { BannerSelectedWeather } from "../src/components/BannerSelectedWeather/BannerSelectedWeather"

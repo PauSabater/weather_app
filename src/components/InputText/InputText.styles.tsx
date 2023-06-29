@@ -10,6 +10,7 @@ export const Input = styled.input`
     box-shadow: var(--input-bs);
 
     &:focus, &:hover {
+        outline: none;
         border: none;
         box-shadow: var(--input-bs-focus);
     }

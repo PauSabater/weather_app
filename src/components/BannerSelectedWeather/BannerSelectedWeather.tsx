@@ -22,7 +22,7 @@ export function BannerSelectedWeather({apiData, city, displayedDayTime, displaye
     // The hour displayed
     const [displayedHour, setDisplayedHour] = useState<string>("now")
 
-    // Updates selected forecast state when the date and hour to dispay change
+    // Updates selected forecast state when the apiData changes or the date and hour to dispay change
     React.useEffect(() => {
         if (apiData.length > 0) {
             const hour: string = displayedDayTime.includes('midnight')
@@ -33,7 +33,7 @@ export function BannerSelectedWeather({apiData, city, displayedDayTime, displaye
             setSelectedForecast(getSpecificForecast(dayTime, apiData))
             setDisplayedHour(hour)
         }
-    }, [displayedDayTime])
+    }, [displayedDayTime, apiData])
 
     // Restarts hour to "now" on data update
     React.useEffect(() => {

@@ -10,7 +10,7 @@ import {
     Tooltip,
     Filler
 } from 'chart.js'
-  
+
 ChartJS.register(
     ChartDataLabels,
     CategoryScale,
@@ -20,7 +20,7 @@ ChartJS.register(
     Tooltip,
     Filler
 );
-  
+
 export const optionsGraphTemp = {
     responsive: true,
     maintainAspectRatio: false,
@@ -67,11 +67,11 @@ export const optionsGraphTemp = {
         },
     },
 }
-  
+
 const labels = ['hour1', 'hour2', 'hour3', 'hour4', 'hour5', 'hour6', 'hour7', 'hour8']
 
-  
-export const setGraphData = (array: any, graphType: string) => { 
+
+export const setGraphData = (array: any, graphType: string) => {
     let borderColor
     let backgroundColor
 
@@ -81,12 +81,12 @@ export const setGraphData = (array: any, graphType: string) => {
 
     } else if (graphType === "rain") {
         borderColor = colors.rain
-        backgroundColor = colors.rainLight 
+        backgroundColor = colors.rainLight
     } else {
         borderColor = colors.wind
         backgroundColor = colors.windLight
     }
-    
+
     return {
         labels,
         legend: {
@@ -98,7 +98,7 @@ export const setGraphData = (array: any, graphType: string) => {
                 color: "black",
                 // @ts-ignore
                 formatter: function (value, ctx) {
-                    return ((value * 100) / 3).toFixed(2) + '%'; 
+                    return ((value * 100) / 3).toFixed(2) + '%';
                 },
             }
         },

@@ -45,7 +45,7 @@ export const CurrentWeatherIcon = styled.div`
     svg {
         position: absolute;
         right: 40px;
-        top: 50%;
+        top: 60%;
         height: 130px;
         width: 130px;
         transform: translateY(-50%);

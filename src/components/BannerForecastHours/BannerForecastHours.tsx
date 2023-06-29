@@ -8,10 +8,11 @@ import React from 'react'
 import { IApiForecastResponse } from '../../assets/interfaces/interfaces'
 import { formatedDayTime } from '../../assets/utils/utils'
 import parse from 'html-react-parser'
+import { IBannerForecastHoursTexts } from '../WeatherApp/index.types'
 
 
-
-export function BannerForecastHours({apiData, displayedDayTime, displayedDayName, handleClickHour}: {
+export function BannerForecastHours({texts, apiData, displayedDayTime, displayedDayName, handleClickHour}: {
+        texts: IBannerForecastHoursTexts,
         apiData: IApiForecastResponse[],
         displayedDayTime: string,
         displayedDayName: string,
@@ -105,9 +106,9 @@ export function BannerForecastHours({apiData, displayedDayTime, displayedDayName
                 case "temp":
                     return Math.round(forecast.main.temp_max)
                 case "rain":
-                    return forecast.hasOwnProperty("rain") ? forecast.rain['3h'] : 0
+                    return forecast.hasOwnProperty("rain") ? forecast.rain['3h'].toFixed(1) : 0
                 case "wind":
-                    return Math.round(forecast.wind.gust)
+                    return forecast.wind.gust.toFixed(1)
                 default:
                     return [0]
             }
@@ -141,21 +142,21 @@ export function BannerForecastHours({apiData, displayedDayTime, displayedDayName
                     onClick={(e) => handleButtonEvent(e)}
                     data-active={selectedGraphType === "temp" ? "true" : "false"}
                 >
-                    TEMPERATURE (C)
+                    {texts.btnTemp}
                 </Styled.ForecastButton>
                 <Styled.ForecastButton
                     data-type={"rain"}
                     onClick={(e) => handleButtonEvent(e)}
                     data-active={selectedGraphType === "rain" ? "true" : "false"}
                 >
-                    RAIN (MM)
+                    {texts.btnRain}
                 </Styled.ForecastButton>
                 <Styled.ForecastButton
                     data-type={"wind"}
                     onClick={(e) => handleButtonEvent(e)}
                     data-active={selectedGraphType === "wind" ? "true" : "false"}
                 >
-                    WIND (MM)
+                    {texts.btnWind}
                 </Styled.ForecastButton>
             </Styled.ButtonsWrap>
         )
@@ -165,7 +166,7 @@ export function BannerForecastHours({apiData, displayedDayTime, displayedDayName
         return (
             <Styled.Container>
                 <Styled.Title>
-                    {`HOURLY FORECAST FOR ${displayedDayName.toUpperCase()}`}
+                    {`${texts.title} ${displayedDayName.toUpperCase()}`}
                 </Styled.Title>
                 {generateButtonsTemplate()}
                 <Styled.ContainerHoursAndGraph>
@@ -174,6 +175,7 @@ export function BannerForecastHours({apiData, displayedDayTime, displayedDayName
                             apiData && apiData.length > 0 ? forecastEightHours.map((forecast: any, index: number) =>
                                 index < 8 ?
                                     <Styled.HourForecastContainer
+                                        key={`id-hour-forecast-${index}`}
                                         onClick={(e) => handleSelectEvent(e)}
                                         onKeyDown={(e) => {if (e.key === 'Enter') handleSelectEvent(e)}}
                                         tabIndex={0}
