@@ -1,4 +1,4 @@
-import * as Functions from '../src/assets/utils/utils'
+import * as Functions from '../assets/utils/utils'
 
 
 // Tests for formatFirstCharacterUpperCase()

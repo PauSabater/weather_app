@@ -93,9 +93,7 @@ export function formatFirstCharacterUpperCase(value: string): string {
         const firstWord = formatedString.charAt(0).toUpperCase() + formatedString.slice(1)
         return `${firstWord} ${value.substring(value.indexOf(' ')+1)}`
     } else {
-        console.log('value is', value)
         value = value.toLowerCase()
-        console.log('value is now', value)
         return value.charAt(0).toUpperCase() + value.slice(1)
     }
 }
