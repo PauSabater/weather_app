@@ -38,6 +38,7 @@ export function BannerForecastHours({texts, apiData, displayedDayTime, displayed
             setEightHoursForecast(getEightHoursForecast(apiData, dayTime))
             setSelectedHourNum("0")
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [displayedDayTime, apiData])
 
     // Updates selected forecast state when the date and hour to dispay change

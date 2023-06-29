@@ -35,9 +35,11 @@ export function CityFinder({texts, updateCityApiResult}: {
     // Display error if list is closed and typing is allowed (as the input value has not been added)
     React.useEffect(() => {
         if (!isListOpen && isTypingAllowed) setIsErrorDisplayed(true)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isListOpen])
 
     // Store function in order to prevent it executing on each re-render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const throttleFn = useCallback(throttle((city: string)=> makeApiRequestT(city), 1500), [])
 
     /**

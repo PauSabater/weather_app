@@ -19,9 +19,8 @@ export function BannerAirConditions({texts, apiData, displayedDayTime}: {
     React.useEffect(() => {
         const dayTime: string = formatedDayTime(displayedDayTime)
         setSelectedForecast(getSpecificForecast(dayTime, apiData))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [displayedDayTime])
-
-    //https://iconscout.com/lotties/weather
 
     if (selectedForecast !== null) {
         return (
