@@ -33,3 +33,9 @@ Builds the app so the code can be uploaded to a packages system in order to be l
 
 If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
+## Install as a npm package
+
+`npm i weather-app-ps`
+
+See the [package documentation](https://www.npmjs.com/package/weather-app-ps) for more information on how to use.
+
