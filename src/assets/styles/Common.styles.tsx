@@ -14,3 +14,8 @@ export const colors = {
     wind: 'hsl(195, 6%, 60%)',
     windLight: 'hsl(195, 6%, 80%)'
 }
+
+export const media = {
+    desktop: "@media only screen and (max-width: 1024px)",
+    mobile: "@media only screen and (max-width: 724px)",
+}

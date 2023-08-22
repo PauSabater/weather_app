@@ -76,7 +76,6 @@ export const getSpecificForecast = (displayedDayTime: string, apiData: IApiForec
  * @return {string}                : formated string
  */
 export const formatedDayTime = (dayTime: string): string => {
-    console.log(dayTime)
     return dayTime.includes('midnight')
         ? `${dayTime.split(' ')[0]} 00:00:00`
         : dayTime

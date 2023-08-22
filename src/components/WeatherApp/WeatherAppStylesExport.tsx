@@ -1,3 +1,5 @@
+import { media } from "../../assets/styles/Common.styles";
+
 /*
  * These styles are injected directly in the component with a <style> tag in order to be able
  * to use container queries
@@ -33,37 +35,47 @@ export const weatherAppStyles = `
         --sz-content: 100%;
 
         /* Colors */
-        --c-black: rgb(10, 10, 10);
-        --c-font-global: var(--c-black);
+        --c-black: hsl(0, 0%, 4%);
+        --c-grey: hsl(0, 0%, 50%);
+        --c-grey-light: hsl(0, 0%, 83%);
+
+        /* Backgrounds */
+        --bg-main: hsl(0, 0%, 100%);
+        --bg-box-content: rgb(246, 247, 252);
+        --bg-grey-hover: hsl(0, 0%, 90%);
+        --bg-grey-selected: hsl(0, 0%, 85%);
 
         /* Transitions */
         --tr-base: 0.3s;
 
-        /* Colors */
-        --bg-main: white;
-
-        /* Fonts */
+        /* Font size */
         --fs-2xl: 2.7rem;
         --fs-xl: 2rem;
         --fs-lg: 1.5rem;
         --fs-base: 1.1rem;
         --fs-sm: 1rem;
         --fs-xs: 0.9rem;
+        --fs-2xs: 0.75rem;
 
+        /* Font color */
         --fc-dark: hsl(0, 0%, 5%);
         --fc-global: hsl(0, 0%, 20%);
         --fc-light: hsl(0, 0%, 40%);
 
+        /* Font weight */
         --fw-bold: 800;
         --fw-medium: 600;
 
-        /* Background */
-        --bg-grey-hover: hsl(0, 0%, 90%);
-        --bg-grey-selected: hsl(0, 0%, 85%);
+        /* Font family */
+        --f-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
         /* Borders */
         --c-border: hsl(241, 0%, 75%);
         --br-separator: 1px solid var(--c-border);
+        --br-content: 2px solid var(--c-grey-light);
+        --br-content-style: dotted;
+
+        /* Border radius */
         --br-r-base: 10px;
 
         /* Box shadow */
@@ -79,6 +91,17 @@ export const weatherAppStyles = `
 
         /* Set element for container queries */
         container-type: inline-size;
+
+        ${media.mobile} {
+            /* Fonts */
+            --fs-2xl: 2.5rem;
+            --fs-xl: 1.5rem;
+            --fs-lg: 1.25rem;
+            --fs-base: 1rem;
+            --fs-sm: 0.9rem;
+            --fs-xs: 0.8em;
+            --fs-2xs: 0.7rem;
+        }
     }
 
     .container-child-webb-app {
@@ -87,6 +110,7 @@ export const weatherAppStyles = `
         color: var(--fc-global);
         grid-template-columns: 0.6fr 0.4fr;
         grid-gap: var(--pd-md);
+        font-family: Helvetica;
     }
 
     @container (max-width: 1000px) {
@@ -95,3 +119,13 @@ export const weatherAppStyles = `
         }
     }
 `
+
+export const overWrittenStyle = (style: string) => {
+    return style
+        ?  `
+            .container-parent-webb-app {
+                ${style}
+            }
+        `
+        : ``
+}

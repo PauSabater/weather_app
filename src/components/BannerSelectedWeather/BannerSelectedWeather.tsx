@@ -43,8 +43,6 @@ export function BannerSelectedWeather({apiData, city, displayedDayTime, displaye
     }, [apiData])
 
 
-
-
     if (selectedForecast !== null) {
         return (
             <Styled.Container>

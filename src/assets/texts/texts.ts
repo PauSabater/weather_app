@@ -1,6 +1,6 @@
 import { IWeatherAppTexts } from "../../components/WeatherApp/index.types"
 
-export const texts: IWeatherAppTexts = {
+export const textDefault: IWeatherAppTexts = {
     cityFinderTexts: {
         placeholder: "Enter your city",
         errorMessage: "Please select a city from the list"

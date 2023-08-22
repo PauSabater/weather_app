@@ -6,14 +6,17 @@ import { CityFinder } from "../CityFinder/CityFinder"
 import { BannerForecastHours } from "../BannerForecastHours/BannerForecastHours"
 import { BannerAirConditions } from "../BannerAirConditions/BannerAirConditions"
 import { BannerForecastDays } from "../BannerForecastDays/BannerForecastDays"
-import { weatherAppStyles } from "./WeatherAppStylesExport"
+import { overWrittenStyle, weatherAppStyles } from "./WeatherAppStylesExport"
 import React from 'react'
 import { IWeatherAppTexts } from "./index.types"
+import { textDefault } from "../../assets/texts/texts"
 
 
-export function WeatherApp({ texts }: {
-        texts: IWeatherAppTexts
+export function WeatherApp({ texts = textDefault, stylesOverwrite  = ''}: {
+        texts?: IWeatherAppTexts,
+        stylesOverwrite?: string
     }): React.JSX.Element {
+
 
     // State for the cities api response
     const [cityApiData, setCityApiData] = useState<ICitiesData>(
@@ -137,6 +140,7 @@ export function WeatherApp({ texts }: {
     return (
         <Styled.WrapMain>
             <style>{weatherAppStyles}</style>
+            <style>{overWrittenStyle(stylesOverwrite)}</style>
             <div className="container-parent-webb-app">
                 <div className="container-child-webb-app">
                     <CityFinder

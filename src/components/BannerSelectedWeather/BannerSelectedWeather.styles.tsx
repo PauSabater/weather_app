@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { media } from '../../assets/styles/Common.styles'
 
 export const Container = styled.div`
     position: relative;
@@ -49,5 +50,11 @@ export const CurrentWeatherIcon = styled.div`
         height: 130px;
         width: 130px;
         transform: translateY(-50%);
+
+        ${media.mobile} {
+            height: 80px;
+            width: 80px;
+            top: 80%;
+        }
     }
 `

@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { media } from '../../assets/styles/Common.styles'
 export { Title } from '../../assets/styles/Common.styles'
 
 export const Container = styled.ul`
@@ -11,9 +12,10 @@ export const Container = styled.ul`
     margin: 0;
     width: 100%;
     height: 100%;
-    background-color: rgb(246, 247, 252);
+    background-color: var(--bg-box-content);
     border-radius: var(--br-r-base);
-
+    border: var(--br-content);
+    border-style: var(--br-content-style);
 
     svg {
         height: 30px;
@@ -73,5 +75,9 @@ export const ContainerSingleDay = styled.li`
     & p {
         align-self: center;
         padding-left: var(--pd-sm);
+    }
+
+    ${media.mobile} {
+        grid-template-columns: minmax(100px, 1fr) minmax(40px, 0.5fr) 1.15fr auto;
     }
 `

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { colors } from '../../assets/styles/Common.styles'
+import { colors, media } from '../../assets/styles/Common.styles'
 
 export const WrapMain = styled.div`
     // Colors:
@@ -21,6 +21,10 @@ export const WrapCurrentConditions = styled.div`
     display: grid;
     grid-template-columns: 70% 30%;
     row-gap: var(--pd-xs);
+
+    ${media.mobile} {
+        grid-template-columns: 60% 40%;
+    }
 `
 
 export const WrapBannerForecastNextDays = styled.div`

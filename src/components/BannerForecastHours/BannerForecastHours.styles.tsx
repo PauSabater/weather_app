@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { media } from '../../assets/styles/Common.styles'
 export { Title } from '../../assets/styles/Common.styles'
 
 export const Container = styled.div`
@@ -8,15 +9,21 @@ export const Container = styled.div`
     justify-content: space-around;
     grid-column: 1/3;
     grid-row-start: 3;
-    background-color: rgb(246, 247, 252);
+    background-color: var(--bg-box-content);
     border-radius: var(--br-r-base);
     padding: var(--pd-inner-component);
+    border: var(--br-content);
+    border-style: var(--br-content-style);
 `
 
 export const ContainerHoursAndGraph = styled.div`
     position: relative;
-    height: 160px;
-    overflow-x: auto;
+    height: 200px;
+    overflow-x: hidden;
+
+    ${media.desktop} {
+        overflow-x: auto;
+    }
 `
 
 export const ContainerHours = styled.div`
@@ -66,13 +73,13 @@ export const HourForecastContainer = styled.div`
         pointer-events: none;
         position: absolute;
         top: 50%;
-        left: 0;
+        left: 1px;
         height: 80px;
         border-radius: 5px;
         width: 100%;
         background-color: var(--bg-grey-selected);
         opacity: 0;
-        border: var(--br-separator);
+        border: none;
         transform: translateY(-50%) translateX(-1px);
         z-index: 1;
         transition: opacity 0.3s;
@@ -127,7 +134,7 @@ export const ForecastButton = styled.button`
     border: none;
     background: none;
     white-space: nowrap;
-    font-size: var(-fs-sm);
+    font-size: var(--fs-xs);
 
     &:after {
         content: '';
@@ -155,5 +162,10 @@ export const ForecastButton = styled.button`
 
     &[data-active="true"]:after {
         opacity: 1;
+    }
+
+    ${media.mobile} {
+        font-size: var(--fs-2xs);
+        margin: 0 var(--mg-xs) var(--mg-xs) 0;
     }
 `

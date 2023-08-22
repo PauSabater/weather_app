@@ -61,8 +61,8 @@ export const optionsGraphTemp = {
             color: 'grey',
             offset: 2,
             font: {
-                size: 16,
-                weight: 600
+                size: 14,
+                weight: 500
             },
         },
     },

@@ -14,7 +14,7 @@ export function BannerForecastDays({apiData, handleClickDay, texts}: {
         texts: IBannerForecastDaysTexts
     }) {
 
-            // State to be used on initial selection
+    // State to be used on initial selection
     const initialForecastState = {
         "0": true,
         "1": false,

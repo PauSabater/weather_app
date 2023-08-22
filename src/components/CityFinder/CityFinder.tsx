@@ -31,10 +31,12 @@ export function CityFinder({texts, updateCityApiResult}: {
     const [isListOpen, setIsListOpen] = useState<boolean>(false)
     const [isTypingAllowed, setIsTypingAllowed] = useState<boolean>(true)
     const [isErrorDisplayed, setIsErrorDisplayed] = useState<boolean>(false)
+    const [isFirstRender, setIsFirstRender] = useState<boolean>(true)
 
     // Display error if list is closed and typing is allowed (as the input value has not been added)
     React.useEffect(() => {
-        if (!isListOpen && isTypingAllowed) setIsErrorDisplayed(true)
+        if (!isListOpen && isTypingAllowed && isFirstRender === false) setIsErrorDisplayed(true)
+        if (isFirstRender === true) setIsFirstRender(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isListOpen])
 
@@ -187,7 +189,7 @@ export function CityFinder({texts, updateCityApiResult}: {
                     isExpanded={isListOpen && citiesData.length > 0}
                 ></InputText>
                 {isErrorDisplayed
-                    ? <Styled.ErrorMessage>Please select a city from the list</Styled.ErrorMessage>
+                    ? <Styled.ErrorMessage>{texts.errorMessage}</Styled.ErrorMessage>
                     : <Fragment></Fragment>}
             </Styled.Wrap>
             <Styled.Wrap
